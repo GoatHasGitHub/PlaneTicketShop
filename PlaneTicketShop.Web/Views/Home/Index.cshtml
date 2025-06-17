@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Welcome to Plane Ticket Shop</h1>
+    <p class="lead">Find and book your perfect flight with ease</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Search Flights</h5>
+                <form asp-controller="Flight" asp-action="Search" method="get">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="departureCity" class="form-label">From</label>
+                            <input type="text" class="form-control" id="departureCity" name="departureCity" placeholder="Departure City">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="arrivalCity" class="form-label">To</label>
+                            <input type="text" class="form-control" id="arrivalCity" name="arrivalCity" placeholder="Arrival City">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="departureDate" class="form-label">Departure Date</label>
+                            <input type="date" class="form-control" id="departureDate" name="departureDate">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="passengers" class="form-label">Passengers</label>
+                            <input type="number" class="form-control" id="passengers" name="passengers" min="1" max="10" value="1">
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Search Flights</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Easy Booking</h5>
+                <p class="card-text">Book your flights in just a few clicks with our simple and intuitive interface.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Best Prices</h5>
+                <p class="card-text">Find the best deals and competitive prices for your travel needs.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">24/7 Support</h5>
+                <p class="card-text">Our customer support team is always ready to help you with any questions.</p>
+            </div>
+        </div>
+    </div>
+</div>

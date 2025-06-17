@@ -1,0 +1,47 @@
+@model IEnumerable<PlaneTicketShop.Core.Models.Flight>
+
+@{
+    ViewData["Title"] = "Available Flights";
+}
+
+<div class="container">
+    <h1 class="my-4">Available Flights</h1>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Create New Flight</a>
+        </p>
+    }
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.FlightNumber - @item.Airline</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@item.DepartureCity → @item.ArrivalCity</h6>
+                        <p class="card-text">
+                            <strong>Departure:</strong> @item.DepartureTime.ToString("g")<br />
+                            <strong>Arrival:</strong> @item.ArrivalTime.ToString("g")<br />
+                            <strong>Price:</strong> $@item.Price.ToString("F2")<br />
+                            <strong>Available Seats:</strong> @item.AvailableSeats
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                            @if (item.AvailableSeats > 0)
+                            {
+                                <a asp-action="Book" asp-route-id="@item.Id" class="btn btn-success">Book Now</a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary" disabled>Sold Out</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

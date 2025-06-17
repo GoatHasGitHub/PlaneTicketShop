@@ -1,0 +1,76 @@
+@model PlaneTicketShop.Core.Models.User
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">My Profile</h2>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Personal Information</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Name</dt>
+                            <dd class="col-sm-8">@Model.FirstName @Model.LastName</dd>
+
+                            <dt class="col-sm-4">Email</dt>
+                            <dd class="col-sm-8">@Model.Email</dd>
+
+                            <dt class="col-sm-4">Phone</dt>
+                            <dd class="col-sm-8">@Model.PhoneNumber</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h5>My Bookings</h5>
+                        @if (Model.Bookings != null && Model.Bookings.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Flight</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var booking in Model.Bookings)
+                                        {
+                                            <tr>
+                                                <td>@booking.Id</td>
+                                                <td>@booking.Flight?.FlightNumber</td>
+                                                <td>@booking.Flight?.DepartureTime.ToString("MM/dd/yyyy HH:mm")</td>
+                                                <td>@booking.Status</td>
+                                                <td>
+                                                    <a asp-controller="Booking" asp-action="Details" asp-route-id="@booking.Id" 
+                                                       class="btn btn-sm btn-info">Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No bookings found.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
