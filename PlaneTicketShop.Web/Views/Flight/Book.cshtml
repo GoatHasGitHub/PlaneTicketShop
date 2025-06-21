@@ -1,4 +1,4 @@
-@model PlaneTicketShop.Core.Models.Booking
+@model PlaneTicketShop.Web.Models.BookingFormViewModel
 
 @{
     ViewData["Title"] = "Book Flight";
@@ -11,9 +11,10 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form asp-action="Book">
+                    <form asp-action="Book" asp-route-id="@Model.FlightId" method="post">
+                        @Html.AntiForgeryToken()
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="FlightId" />
+                        <input type="hidden" name="FlightId" value="@Model.FlightId" />
 
                         <div class="form-group mb-3">
                             <label asp-for="NumberOfPassengers" class="control-label">Number of Passengers</label>
@@ -40,7 +41,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="submit" value="Confirm Booking" class="btn btn-primary" />
+                            <input type="submit" value="Proceed to Payment" class="btn btn-primary" />
                             <a asp-action="Index" class="btn btn-secondary">Back to Flights</a>
                         </div>
                     </form>

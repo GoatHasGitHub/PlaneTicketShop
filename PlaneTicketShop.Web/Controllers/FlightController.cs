@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlaneTicketShop.Core.Models;
 using PlaneTicketShop.Infrastructure.Data;
+using PlaneTicketShop.Web.Models;
 
 namespace PlaneTicketShop.Web.Controllers
 {
@@ -15,14 +16,12 @@ namespace PlaneTicketShop.Web.Controllers
             _context = context;
         }
 
-        // GET: Flight
         public async Task<IActionResult> Index()
         {
             var flights = await _context.Flights.ToListAsync();
             return View(flights);
         }
 
-        // GET: Flight/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,14 +39,12 @@ namespace PlaneTicketShop.Web.Controllers
             return View(flight);
         }
 
-        // GET: Flight/Create
         [Authorize(Policy = "RequireAdminRole")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Flight/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "RequireAdminRole")]
@@ -62,7 +59,6 @@ namespace PlaneTicketShop.Web.Controllers
             return View(flight);
         }
 
-        // GET: Flight/Book/5
         [Authorize]
         public async Task<IActionResult> Book(int? id)
         {
@@ -77,14 +73,13 @@ namespace PlaneTicketShop.Web.Controllers
                 return NotFound();
             }
 
-            return View(new Booking { FlightId = flight.Id });
+            return View(new BookingFormViewModel { FlightId = flight.Id });
         }
 
-        // POST: Flight/Book/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Book(int id, [Bind("NumberOfPassengers,PassengerName,PassengerEmail,PassengerPhone")] Booking booking)
+        public async Task<IActionResult> Book(int id, BookingFormViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -93,18 +88,52 @@ namespace PlaneTicketShop.Web.Controllers
                 {
                     return NotFound();
                 }
-
-                booking.FlightId = id;
-                booking.UserId = int.Parse(User.Identity.Name);
-                booking.BookingDate = DateTime.UtcNow;
-                booking.Status = "Confirmed";
-                booking.TotalPrice = flight.Price * booking.NumberOfPassengers;
-
+                var booking = new Booking
+                {
+                    FlightId = id,
+                    NumberOfPassengers = model.NumberOfPassengers,
+                    PassengerName = model.PassengerName,
+                    PassengerEmail = model.PassengerEmail,
+                    PassengerPhone = model.PassengerPhone,
+                    UserId = int.Parse(User.Identity.Name),
+                    BookingDate = DateTime.UtcNow,
+                    Status = "Not successful",
+                    TotalPrice = flight.Price * model.NumberOfPassengers
+                };
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Payment", new { bookingId = booking.Id });
             }
-            return View(booking);
+            model.FlightId = id;
+            return View(model);
+        }
+
+        [Authorize]
+        public IActionResult Payment(int bookingId)
+        {
+            ViewBag.BookingId = bookingId;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcessPayment(int bookingId, string stripeToken)
+        {
+            if (string.IsNullOrEmpty(stripeToken))
+            {
+                TempData["PaymentSuccess"] = "Payment failed: No payment token received.";
+                return RedirectToAction("Index");
+            }
+            var booking = await _context.Bookings.Include(b => b.Flight).FirstOrDefaultAsync(b => b.Id == bookingId);
+            if (booking != null)
+            {
+                booking.Status = "Successful";
+                booking.Flight = await _context.Flights.FindAsync(booking.FlightId);
+                await _context.SaveChangesAsync();
+            }
+            TempData["PaymentSuccess"] = "Payment successful! Your booking is confirmed.";
+            return RedirectToAction("Index");
         }
     }
 } 

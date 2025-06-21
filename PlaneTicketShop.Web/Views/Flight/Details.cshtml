@@ -1,0 +1,30 @@
+@model PlaneTicketShop.Core.Models.Flight
+
+@{
+    ViewData["Title"] = "Flight Details";
+}
+
+<div class="container">
+    <h1 class="my-4">Flight Details</h1>
+    <dl class="row">
+        <dt class="col-sm-3">Flight Number</dt>
+        <dd class="col-sm-9">@Model.FlightNumber</dd>
+        <dt class="col-sm-3">Airline</dt>
+        <dd class="col-sm-9">@Model.Airline</dd>
+        <dt class="col-sm-3">Departure City</dt>
+        <dd class="col-sm-9">@Model.DepartureCity</dd>
+        <dt class="col-sm-3">Arrival City</dt>
+        <dd class="col-sm-9">@Model.ArrivalCity</dd>
+        <dt class="col-sm-3">Departure Time</dt>
+        <dd class="col-sm-9">@Model.DepartureTime</dd>
+        <dt class="col-sm-3">Arrival Time</dt>
+        <dd class="col-sm-9">@Model.ArrivalTime</dd>
+        <dt class="col-sm-3">Price</dt>
+        <dd class="col-sm-9">@Model.Price</dd>
+        <dt class="col-sm-3">Available Seats</dt>
+        <dd class="col-sm-9">@Model.AvailableSeats</dd>
+        <dt class="col-sm-3">Aircraft Type</dt>
+        <dd class="col-sm-9">@Model.AircraftType</dd>
+    </dl>
+    <a asp-action="Index" class="btn btn-secondary">Back to Flights</a>
+</div> 

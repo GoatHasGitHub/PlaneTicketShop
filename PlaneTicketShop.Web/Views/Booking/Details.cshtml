@@ -1,0 +1,28 @@
+@model PlaneTicketShop.Core.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container">
+    <h1 class="my-4">Booking Details</h1>
+    <dl class="row">
+        <dt class="col-sm-3">Booking ID</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+        <dt class="col-sm-3">Flight</dt>
+        <dd class="col-sm-9">@Model.Flight?.FlightNumber</dd>
+        <dt class="col-sm-3">Passenger Name</dt>
+        <dd class="col-sm-9">@Model.PassengerName</dd>
+        <dt class="col-sm-3">Passenger Email</dt>
+        <dd class="col-sm-9">@Model.PassengerEmail</dd>
+        <dt class="col-sm-3">Passenger Phone</dt>
+        <dd class="col-sm-9">@Model.PassengerPhone</dd>
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">@Model.Status</dd>
+        <dt class="col-sm-3">Total Price</dt>
+        <dd class="col-sm-9">@Model.TotalPrice</dd>
+        <dt class="col-sm-3">Booking Date</dt>
+        <dd class="col-sm-9">@Model.BookingDate</dd>
+    </dl>
+    <a asp-action="Profile" asp-controller="Account" class="btn btn-secondary">Back to Profile</a>
+</div> 

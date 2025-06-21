@@ -18,7 +18,6 @@ namespace PlaneTicketShop.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure relationships and constraints
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Flight)
                 .WithMany()
@@ -31,7 +30,6 @@ namespace PlaneTicketShop.Infrastructure.Data
                 .HasForeignKey("UserId")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Seed data for Users
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -46,7 +44,6 @@ namespace PlaneTicketShop.Infrastructure.Data
                 }
             );
 
-            // Seed data for Flights
             modelBuilder.Entity<Flight>().HasData(
                 new Flight
                 {

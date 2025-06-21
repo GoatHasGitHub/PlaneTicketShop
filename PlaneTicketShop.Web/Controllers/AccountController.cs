@@ -85,25 +85,25 @@ namespace PlaneTicketShop.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // Check for existing email
+                    // provjera maila
                     if (await _context.Users.AnyAsync(u => u.Email == model.Email))
                     {
                         ModelState.AddModelError("Email", "Email already exists.");
                         return View(model);
                     }
 
-                    // Check for existing username
+                    // provjera usernamea
                     if (await _context.Users.AnyAsync(u => u.UserName == model.UserName))
                     {
                         ModelState.AddModelError("UserName", "Username already exists.");
                         return View(model);
                     }
 
-                    // Set default values
+                    // default values
                     model.Role = "User";
                     model.Bookings = new List<Booking>();
 
-                    // Add user to database
+                    // dodati usera u bazu
                     _context.Users.Add(model);
                     await _context.SaveChangesAsync();
 
@@ -111,7 +111,7 @@ namespace PlaneTicketShop.Web.Controllers
                     return RedirectToAction(nameof(Login));
                 }
 
-                // If we got this far, something failed, redisplay form
+                // failed
                 _logger.LogWarning("Registration failed for user: {Username}. ModelState errors: {Errors}", 
                     model.UserName, 
                     string.Join(", ", ModelState.Values
@@ -144,7 +144,10 @@ namespace PlaneTicketShop.Web.Controllers
             }
 
             var userId = int.Parse(User.Identity.Name);
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _context.Users
+                .Include(u => u.Bookings)
+                .ThenInclude(b => b.Flight)
+                .FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
                 return NotFound();

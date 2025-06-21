@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="container">
+    <h1 class="my-4">Payment</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form id="payment-form" method="post" asp-action="ProcessPayment" asp-controller="Flight">
+                        <input type="hidden" name="bookingId" value="@ViewBag.BookingId" />
+                        <div class="form-group mb-3">
+                            <label for="card-element">Credit or debit card</label>
+                            <div id="card-element" class="form-control"></div>
+                            <div id="card-errors" class="text-danger mt-2" role="alert"></div>
+                        </div>
+                        <button id="submit-button" type="submit" class="btn btn-success w-100">Pay Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Replace with your Stripe publishable key
+        var stripe = Stripe("pk_test_51RcTVF09dsijBs5ktDptVszbGY8GwZ0Zs5Og2epJzrHeSrcKXvW8JAtgHgX6hxjESvAMDxZH0zHaRjHjXBIQjLeO00f1dFtGsI");
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        card.on('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            document.getElementById('submit-button').disabled = true;
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                    document.getElementById('submit-button').disabled = false;
+                } else {
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.setAttribute('type', 'hidden');
+                    hiddenInput.setAttribute('name', 'stripeToken');
+                    hiddenInput.setAttribute('value', result.token.id);
+                    form.appendChild(hiddenInput);
+                    form.submit();
+                }
+            });
+        });
+    </script>
+} 
