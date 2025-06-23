@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title mb-4">Search Flights</h5>
-                <form asp-controller="Flight" asp-action="Search" method="get">
+                <form asp-controller="Home" asp-action="Index" method="get">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="departureCity" class="form-label">From</label>
@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="passengers" class="form-label">Passengers</label>
-                            <input type="number" class="form-control" id="passengers" name="passengers" min="1" max="10" value="1">
+                            <input type="number" class="form-control" id="passengers" name="passengers" min="1" value="1">
                         </div>
                     </div>
                     <div class="text-center">
